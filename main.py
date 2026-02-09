@@ -4,6 +4,8 @@ import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
 
+VERSION = "1.1.0" # 1 (Initial Release) . 1 (Banking/Robbing Update) . 0 (No patches yet)
+
 # Load environment variables (the .env file)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -27,9 +29,12 @@ class CurrencyBot(commands.Bot):
                 await self.load_extension(f'cogs.{filename[:-3]}')
                 print(f'Loaded extension: {filename}')
 
-    async def on_ready(self):
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
+    @bot.event
+    async def on_ready():
+        print(f'--- GlobEx Global Economy ---')
+        print(f'Logged in as {bot.user.name}')
+        print(f'Version: {VERSION}')
+        print(f'-----------------------------')
 
 bot = CurrencyBot()
 
