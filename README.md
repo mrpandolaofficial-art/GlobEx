@@ -73,3 +73,6 @@ python3 main.py
 | !pay @user | Transfer money to another player. | None |
 | !slots | Gamble your money (1x, 2x, or 5x). | None |
 | !leaderboard | See the top 10 richest players. | None |
+| !deposit / !dep | Move money to the safety of the Bank. | None |
+| !withdraw / !with | Take money out of the Bank. | None |
+| !rob @user | High-risk: Steal from a user's wallet. | 5m |

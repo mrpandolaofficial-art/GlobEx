@@ -34,5 +34,15 @@ class Database:
     def get_leaderboard(self):
         self.cursor.execute('SELECT user_id, (wallet + bank) as total FROM users ORDER BY total DESC LIMIT 10')
         return self.cursor.fetchall()
+    
+    def deposit(self, user_id, amount):
+        # Subtract from wallet, add to bank
+        self.cursor.execute('UPDATE users SET wallet = wallet - ?, bank = bank + ? WHERE user_id = ?', (amount, amount, user_id))
+        self.conn.commit()
+
+    def withdraw(self, user_id, amount):
+        # Subtract from bank, add to wallet
+        self.cursor.execute('UPDATE users SET bank = bank - ?, wallet = wallet + ? WHERE user_id = ?', (amount, amount, user_id))
+        self.conn.commit()
 
 db = Database()

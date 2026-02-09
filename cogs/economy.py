@@ -95,6 +95,85 @@ class Economy(commands.Cog):
         )
         await ctx.send(embed=embed)
 
+    @commands.command(name="deposit", aliases=["dep"])
+    async def deposit(self, ctx, amount: str):
+        """Move money from your wallet to your bank."""
+        user_data = db.get_user(ctx.author.id)
+        wallet = user_data[1]
+
+        if amount.lower() == "all":
+            amount = wallet
+        else:
+            try:
+                amount = int(amount)
+            except ValueError:
+                return await ctx.send("❌ Please enter a valid number or 'all'.")
+
+        if amount <= 0: return await ctx.send("❌ You can't deposit nothing!")
+        if wallet < amount: return await ctx.send("❌ You don't have that much in your wallet!")
+
+        db.deposit(ctx.author.id, amount)
+        await ctx.send(f"🏦 Deposited **${amount:,}** into your bank!")
+
+    @commands.command(name="withdraw", aliases=["with"])
+    async def withdraw(self, ctx, amount: str):
+        """Move money from your bank to your wallet."""
+        user_data = db.get_user(ctx.author.id)
+        bank = user_data[2]
+
+        if amount.lower() == "all":
+            amount = bank
+        else:
+            try:
+                amount = int(amount)
+            except ValueError:
+                return await ctx.send("❌ Please enter a valid number or 'all'.")
+
+        if amount <= 0: return await ctx.send("❌ You can't withdraw nothing!")
+        if bank < amount: return await ctx.send("❌ You don't have that much in your bank!")
+
+        db.withdraw(ctx.author.id, amount)
+        await ctx.send(f"💵 Withdrew **${amount:,}** from your bank!")
+
+    @commands.command(name="rob")
+    @commands.cooldown(1, 300, commands.BucketType.user) # 5-minute cooldown
+    async def rob(self, ctx, member: discord.Member):
+        """Try to steal money from another user's wallet!"""
+        if member.id == ctx.author.id:
+            return await ctx.send("❌ You can't rob yourself. That's just moving money between pockets.")
+
+        # Get balances
+        robber_data = db.get_user(ctx.author.id)
+        victim_data = db.get_user(member.id)
+        
+        victim_wallet = victim_data[1]
+        
+        if victim_wallet < 200:
+            return await ctx.send(f"❌ **{member.display_name}** is too poor to rob. Leave them alone!")
+
+        # Success chance (40% success)
+        chance = random.randint(1, 10)
+        
+        if chance <= 4:
+            # Success! Steal between 20% and 100% of their wallet
+            stolen = random.randint(int(victim_wallet * 0.2), victim_wallet)
+            db.update_wallet(ctx.author.id, stolen)
+            db.update_wallet(member.id, -stolen)
+            await ctx.send(f"🥷 **SUCCESS!** You robbed **{member.display_name}** and got away with **${stolen:,}**!")
+        else:
+            # Failure! Pay a fine to the victim
+            fine = random.randint(100, 500)
+            db.update_wallet(ctx.author.id, -fine)
+            db.update_wallet(member.id, fine)
+            await ctx.send(f"🚔 **BUSTED!** You were caught trying to rob **{member.display_name}** and paid a **${fine}** fine to them!")
+
+    @rob.error
+    async def rob_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            minutes = int(error.retry_after // 60)
+            seconds = int(error.retry_after % 60)
+            await ctx.send(f"⏳ The heat is still on! Wait **{minutes}m {seconds}s** before robbing again.")
+
 # No decorator needed here! 
     # This is a built-in function that discord.py looks for automatically.
     async def cog_command_error(self, ctx, error):
