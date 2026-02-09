@@ -16,17 +16,19 @@ Before you begin, ensure you have the following installed:
 ## 🚀 Phase 2: Installation
 
 ### 1. Clone the Repository
-git clone https://github.com/mrpandolaofficial-art/ServerWideCurrencyBot.git
+`git clone https://github.com/mrpandolaofficial-art/ServerWideCurrencyBot.git`
 
 ### 2. Navigate to the Directory
-cd ServerWideCurrencyBot
+`cd ServerWideCurrencyBot`
 
 ### 3. Create a Virtual Environment
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
 ### 4. Install Requirements
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ---
 
@@ -44,7 +46,7 @@ DISCORD_TOKEN=your_token_here
 ## 🎮 Phase 4: Running the Bot
 
 To start GlobEx, run:
-python3 main.py
+`python3 main.py`
 
 ---
 
