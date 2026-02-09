@@ -17,18 +17,19 @@ Before you begin, ensure you have the following installed:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/mrpandolaofficial-art/ServerWideCurrencyBot.git
+git clone https://github.com/mrpandolaofficial-art/GlobEx.git
 ```
 
 ### 2. Navigate to the Directory
 ```bash
-cd ServerWideCurrencyBot
+cd GlobEx
 ```
 
 ### 3. Create a Virtual Environment
 ```bash
 python3 -m venv venv
 ```
+Make sure you activate the .venv
 ```bash
 source venv/bin/activate
 ```
